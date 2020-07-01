@@ -49,9 +49,8 @@ RUN cd /tmp/build/nginx-${NGINX_VERSION} && \
     make CFLAGS=-Wno-error -j $(getconf _NPROCESSORS_ONLN) && \
     make install
 
-# Copy stats.xsl file to nginx html directory and clean build files
-RUN cp /tmp/build/nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION}/stat.xsl /usr/local/nginx/html/stat.xsl && \
-	rm -rf /tmp/build
+# Clean build files
+RUN rm -rf /tmp/build
 
 ##### Building the final image #####
 FROM alpine:${ALPINE_VERSION}
@@ -77,9 +76,6 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
 
 # Copy  nginx config file to container
 COPY conf/nginx_restream_only.conf /etc/nginx/nginx.conf
-
-# Copy  html players to container
-COPY players /usr/local/nginx/html/players
 
 EXPOSE 1935
 
